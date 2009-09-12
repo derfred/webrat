@@ -229,7 +229,13 @@ module Webrat
       if text_or_regexp.is_a?(Regexp)
         "evalregex:#{text_or_regexp.inspect}"
       else
-        "evalregex:/#{text_or_regexp}/"
+        "evalregex:/#{escape_for_regex text_or_regexp}/"
+      end
+    end
+
+    def escape_for_regex(text)
+      ["(", ")", "[", "]", "{", "}", "\\", "|", "+", "*"].inject(text) do |acc, char|
+        acc.gsub(char, "\\\\#{char}")
       end
     end
 
